@@ -1,29 +1,52 @@
 <!DOCTYPE html>
-<html>
+<html lang="ko">
 <head>
-    <title>화장실 휴지 상태</title>
-    <script>
-        function updateStatus() {
-            fetch('status.txt')
-                .then(response => response.text())
-                .then(data => {
-                    document.getElementById('status').innerText = data;
-                });
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>거리 측정기</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
         }
-
-        function sendSignal() {
-            fetch('alert.php?status=refresh') // 상태를 새로 고침하기 위한 신호 전송
-                .then(response => response.text())
-                .then(data => {
-                    console.log(data); // 서버의 응답을 콘솔에 출력
-                    updateStatus(); // 상태 업데이트
-                });
+        h1 {
+            color: #333;
         }
-    </script>
+        .distance {
+            font-size: 24px;
+            color: #007BFF;
+        }
+    </style>
 </head>
 <body>
-    <h1>화장실 휴지 상태</h1>
-    <p id="status">상태를 로딩 중...</p>
-    <button onclick="sendSignal()">새로 고침</button> <!-- 새로 고침 버튼 -->
+    <h1>초음파 거리 측정기</h1>
+    <div class="distance">
+        <!-- 거리가 표시될 곳 -->
+        거리: <span id="distanceValue">0</span> cm
+    </div>
+
+    <script>
+        // URL에서 쿼리 매개변수에서 거리 값을 가져오는 함수
+        function getQueryVariable(variable) {
+            var query = window.location.search.substring(1);
+            var vars = query.split("&");
+            for (var i = 0; i < vars.length; i++) {
+                var pair = vars[i].split("=");
+                if (decodeURIComponent(pair[0]) == variable) {
+                    return decodeURIComponent(pair[1]);
+                }
+            }
+            return null;
+        }
+
+        // 페이지 로드 시 거리 값을 표시
+        window.onload = function() {
+            var distance = getQueryVariable("distance");
+            if (distance) {
+                document.getElementById("distanceValue").textContent = distance;
+            }
+        };
+    </script>
 </body>
 </html>
