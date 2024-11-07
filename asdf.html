@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>화장실 휴지 상태</title>
+    <script>
+        function updateStatus() {
+            fetch('status.txt')
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('status').innerText = data;
+                });
+        }
+
+        function sendSignal() {
+            fetch('alert.php?status=refresh') // 상태를 새로 고침하기 위한 신호 전송
+                .then(response => response.text())
+                .then(data => {
+                    console.log(data); // 서버의 응답을 콘솔에 출력
+                    updateStatus(); // 상태 업데이트
+                });
+        }
+    </script>
+</head>
+<body>
+    <h1>화장실 휴지 상태</h1>
+    <p id="status">상태를 로딩 중...</p>
+    <button onclick="sendSignal()">새로 고침</button> <!-- 새로 고침 버튼 -->
+</body>
+</html>
